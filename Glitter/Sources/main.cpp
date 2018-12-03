@@ -37,7 +37,7 @@ int main(int argc, char * argv[]) {
         "layout (location = 0) in vec3 aPos;\n"
         "void main()\n"
         "{\n"
-        "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+        "    gl_Position = vec4(aPos.x, -aPos.y, aPos.z, 1.0);\n"
         "}";
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertex_shader_src, nullptr);
@@ -116,16 +116,16 @@ int main(int argc, char * argv[]) {
     glBindVertexArray(0);
 
     glUseProgram(program);
-    glViewport(0, 0, mWidth, mHeight);
+
+    GLint fboWidth, fboHeight;
+    glfwGetFramebufferSize(mWindow, &fboWidth, &fboHeight);
+    glViewport(0, 0, fboWidth, fboHeight);
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
         if (glfwGetKey(mWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(mWindow, true);
         }
-
-        // why can't view port here?
-        //glViewport(0, 0, mWidth, mHeight);
 
         // Background Fill Color
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
