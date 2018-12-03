@@ -62,9 +62,10 @@ int main(int argc, char * argv[]) {
     const GLchar* fragment_shader_src =
         "#version 330 core\n"
         "out vec4 FragColor;\n"
+        "uniform vec4 ourColor;\n"
         "void main()\n"
         "{\n"
-        "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+        "    FragColor = ourColor;\n"
         "}";
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragment_shader, 1, &fragment_shader_src, nullptr);
@@ -91,6 +92,8 @@ int main(int argc, char * argv[]) {
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
+    
+    GLuint posOurColor = glGetUniformLocation(program, "ourColor");
 
     GLfloat vertices[] = {
         0.5f,  0.5f,  0.0f,  // top right
@@ -139,7 +142,7 @@ int main(int argc, char * argv[]) {
     glfwGetFramebufferSize(mWindow, &fboWidth, &fboHeight);
     glViewport(0, 0, fboWidth, fboHeight);
     glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // Rendering Loop
     while (glfwWindowShouldClose(mWindow) == false) {
@@ -156,6 +159,10 @@ int main(int argc, char * argv[]) {
 
         // Background Fill Color
         glClear(GL_COLOR_BUFFER_BIT);
+
+        float timeValue = glfwGetTime();
+        float greenValue = sin(timeValue) / 2.0f + 0.5f;
+        glUniform4f(posOurColor, 0.0f, greenValue, 0.0f, 1.0f);
 
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
