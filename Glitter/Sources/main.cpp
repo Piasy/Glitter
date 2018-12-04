@@ -36,10 +36,11 @@ int main(int argc, char * argv[]) {
         "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
         "layout (location = 1) in vec3 aColor;\n"
+        "uniform float xOffset;\n"
         "out vec3 ourColor;\n"
         "void main()\n"
         "{\n"
-        "    gl_Position = vec4(aPos.x, -aPos.y, aPos.z, 1.0);\n"
+        "    gl_Position = vec4(aPos.x + xOffset, -aPos.y, aPos.z, 1.0);\n"
         "    ourColor = aColor;\n"
         "}";
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -88,6 +89,8 @@ int main(int argc, char * argv[]) {
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
+    
+    GLuint xOffsetPos = glGetUniformLocation(program, "xOffset");
     
     GLfloat vertices[] = {
         -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
@@ -138,6 +141,10 @@ int main(int argc, char * argv[]) {
         // Background Fill Color
         glClearColor(0.25f, 0.25f, 0.25f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        double now = glfwGetTime();
+        float xOffset = sin(now) / 2.0f;
+        glUniform1f(xOffsetPos, xOffset);
 
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES, 0, 3);
