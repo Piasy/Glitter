@@ -41,7 +41,8 @@ int main(int argc, char * argv[]) {
         "void main()\n"
         "{\n"
         "    gl_Position = vec4(aPos.x + xOffset, -aPos.y, aPos.z, 1.0);\n"
-        "    ourColor = aColor;\n"
+        //"    ourColor = aColor;\n"
+        "    ourColor = gl_Position.xyz;\n"
         "}";
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertex_shader_src, nullptr);
