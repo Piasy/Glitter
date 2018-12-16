@@ -243,16 +243,26 @@ int main(int argc, char * argv[]) {
 
         glUseProgram(program);
 
-        glm::mat4 trans(1.0f);
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans = glm::rotate(trans, (float)glfwGetTime(),
-                            glm::vec3(0.0f, 0.0f, 1.0f));
-        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
-
         glActiveTexture(texture0Enum);
         glBindTexture(GL_TEXTURE_2D, textures[0]);
         glActiveTexture(texture1Enum);
         glBindTexture(GL_TEXTURE_2D, textures[1]);
+
+        glm::mat4 trans1(1.0f);
+        trans1 = glm::translate(trans1, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans1 = glm::rotate(trans1, (float)glfwGetTime(),
+                            glm::vec3(0.0f, 0.0f, 1.0f));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans1));
+
+        glBindVertexArray(vao);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+
+        glm::mat4 trans2(1.0f);
+        trans2 = glm::translate(trans2, glm::vec3(-0.5f, 0.5f, 0.0f));
+        float factor = (glm::sin((float)glfwGetTime()) + 1) / 2 + 0.5;
+        trans2 = glm::scale(trans2, glm::vec3(factor, factor, factor));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans2));
 
         glBindVertexArray(vao);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
