@@ -94,11 +94,12 @@ int main(int argc, char * argv[]) {
         "layout (location = 0) in vec3 aPos;\n"
         "layout (location = 1) in vec3 aColor;\n"
         "layout (location = 2) in vec2 aTexCoord;\n"
+        "uniform mat4 transform;\n"
         "out vec3 ourColor;\n"
         "out vec2 texCoord;\n"
         "void main()\n"
         "{\n"
-        "    gl_Position = vec4(aPos, 1.0);\n"
+        "    gl_Position = transform * vec4(aPos, 1.0);\n"
         "    ourColor = aColor;\n"
         "    texCoord = aTexCoord;\n"
         "}";
@@ -154,6 +155,8 @@ int main(int argc, char * argv[]) {
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
+
+    GLuint transformLoc = glGetUniformLocation(program, "transform");
 
     GLuint texture0Enum = GL_TEXTURE3;
     GLuint texture1Enum = GL_TEXTURE0;
@@ -239,6 +242,12 @@ int main(int argc, char * argv[]) {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(program);
+
+        glm::mat4 trans(1.0f);
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, (float)glfwGetTime(),
+                            glm::vec3(0.0f, 0.0f, 1.0f));
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
         glActiveTexture(texture0Enum);
         glBindTexture(GL_TEXTURE_2D, textures[0]);
